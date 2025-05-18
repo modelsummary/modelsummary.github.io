@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>도서관 로그인</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {	
+      background-image: url("C:/Users/model/OneDrive/바탕 화면/도서관홈페이지/학교캠퍼스.png");
+      background-repeat: no-repeat; /* 배경 이미지 반복 방지 */
+      background-size: cover; /* 이미지가 화면을 꽉 채우도록 */
+      background-position: center; /* 이미지를 중앙에 배치 */
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+    .container {
+      display: flex;
+      max-width: 800px;
+      width: 100%;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative; /* 가상 요소 위치를 위한 설정 */
+    }
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 10px; /* 그라데이션 높이 */
+      background: linear-gradient(to bottom, #6b7280, transparent); /* 상단 그라데이션 */
+      z-index: 1;
+    }
+    .container::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 10px; /* 그라데이션 높이 */
+      background: linear-gradient(to top, #6b7280, transparent); /* 하단 그라데이션 */
+      z-index: 1;
+    }
+    .left-section {
+      flex: 1;
+      background: white;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-right: 1px solid #e5e7eb;
+    }
+    .right-section {
+      flex: 1;
+      background: white;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .logo {
+      width: 150px;
+      height: auto;
+      margin-top: 1rem;
+    }
+    .error-message {
+      color: red;
+      display: none;
+      margin-top: 0.5rem;
+    }
+    .university-text {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #1e3a8a;
+      margin-bottom: 0.5rem;
+    }
+    .motto-text {
+      font-size: 1rem;
+      color: #6b7280;
+      margin-bottom: 1rem;
+    }
+    .korean-text {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #1e3a8a;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left-section">
+      <div class="university-text">Ad Vitam et Veritatem</div>
+      <div class="motto-text">사랑과 진리를 향하여</div>
+      <div class="korean-text">가톨릭대학교</div>
+      <img src="C:/Users/model/OneDrive/바탕 화면/도서관홈페이지/가톨릭대학교_UI_시그니처_상하조합123123.png" class="logo" />
+    </div>
+    <div class="right-section">
+      <h1 class="text-xl font-bold mb-4">MEMBER LOGIN</h1>
+      <form id="loginForm">
+        <div class="mb-4">
+          <label for="username" class="block text-sm font-medium text-gray-700">사용자 ID 입력</label>
+          <input
+            type="text"
+            id="username"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            placeholder="사용자 ID 입력"
+            required
+          />
+        </div>
+        <div class="mb-4">
+          <label for="password" class="block text-sm font-medium text-gray-700">비밀번호 입력</label>
+          <input
+            type="password"
+            id="password"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            placeholder="비밀번호 입력"
+            required
+          />
+        </div>
+        <div id="errorMessage" class="error-message">아이디 또는 비밀번호가 잘못되었습니다.</div>
+        <button
+          type="submit"
+          class="w-full px-4 py-2 bg-blue-900 text-white rounded-md shadow hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          로그인
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorMessage = document.getElementById('errorMessage');
+
+      const validUsers = {
+        'admin': '1234',
+        'stud1': '1234',
+        'stud2': '1234',
+        'stud3': '1234'
+      };
+
+      if (validUsers[username] && validUsers[username] === password) {
+        localStorage.setItem('currentUser', username);
+        if (username === 'admin') {
+          window.location.href = 'admin.html';
+        } else {
+          window.location.href = 'homepage1.html';
+        }
+      } else {
+        errorMessage.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
