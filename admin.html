@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>도서관 관리자 페이지</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #1e3a8a;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 p-4">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-2xl font-bold mb-4 flex items-center gap-2">
+      도서관 관리자 페이지
+    </h1>
+
+    <div class="mb-4">
+      <h2 class="text-lg font-semibold mb-2">좌석 예약 현황</h2>
+      <table id="reservation-table">
+        <thead>
+          <tr>
+            <th>사용자 아이디</th>
+            <th>예약된 좌석</th>
+            <th>열람실</th>
+            <th>남은 시간</th>
+            <th>취소</th> <!-- ✅ 추가 -->
+          </tr>
+        </thead>
+        <tbody id="reservation-body"></tbody>
+      </table>
+    </div>
+
+    <button onclick="window.location.href='homepage1.html'" class="px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700">
+      좌석 현황 페이지로 돌아가기
+    </button>
+  </div>
+
+  <script>
+    function displayReservations() {
+      const seatReservations = JSON.parse(localStorage.getItem('seatReservations')) || {};
+      const tbody = document.getElementById('reservation-body');
+      tbody.innerHTML = '';
+
+      for (const seatNum in seatReservations) {
+        const reservation = seatReservations[seatNum];
+        if (reservation.expiry > Date.now()) {
+          const row = document.createElement('tr');
+
+          // 사용자 아이디
+          const userCell = document.createElement('td');
+          userCell.textContent = reservation.user;
+          row.appendChild(userCell);
+
+          // 예약된 좌석
+          const seatCell = document.createElement('td');
+          const seatNumber = seatNum.split('-seat')[1];
+          seatCell.textContent = `좌석 ${seatNumber}`;
+          row.appendChild(seatCell);
+
+          // 열람실
+          const roomCell = document.createElement('td');
+          const roomId = seatNum.split('-')[0];
+          roomCell.textContent = roomId === 'room1'==='room2' ? '제1자유열람실A' : '제2자유열람실A':'제3자유열람실A';
+          row.appendChild(roomCell);
+
+          // 남은 시간
+          const timeCell = document.createElement('td');
+          const remainingTime = Math.ceil((reservation.expiry - Date.now()) / 1000);
+          timeCell.textContent = `${remainingTime}초`;
+          timeCell.dataset.expiry = reservation.expiry;
+          timeCell.dataset.seatNum = seatNum;
+          row.appendChild(timeCell);
+
+          // ✅ 취소 버튼 추가
+          const cancelCell = document.createElement('td');
+          const cancelBtn = document.createElement('button');
+          cancelBtn.textContent = '취소';
+          cancelBtn.className = 'bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm';
+          cancelBtn.onclick = () => {
+            delete seatReservations[seatNum];
+            localStorage.setItem('seatReservations', JSON.stringify(seatReservations));
+            displayReservations(); // 갱신
+          };
+          cancelCell.appendChild(cancelBtn);
+          row.appendChild(cancelCell);
+
+          tbody.appendChild(row);
+        } else {
+          // 만료된 예약은 삭제
+          delete seatReservations[seatNum];
+          localStorage.setItem('seatReservations', JSON.stringify(seatReservations));
+        }
+      }
+
+      // 남은 시간 업데이트
+      setInterval(() => {
+        const rows = tbody.getElementsByTagName('tr');
+        for (let row of rows) {
+          const timeCell = row.cells[3];
+          const expiry = parseInt(timeCell.dataset.expiry);
+          const seatNum = timeCell.dataset.seatNum;
+          const remainingTime = Math.ceil((expiry - Date.now()) / 1000);
+          if (remainingTime > 0) {
+            timeCell.textContent = `${remainingTime}초`;
+          } else {
+            row.remove();
+            delete seatReservations[seatNum];
+            localStorage.setItem('seatReservations', JSON.stringify(seatReservations));
+          }
+        }
+      }, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      displayReservations();
+    });
+  </script>
+</body>
+</html>
