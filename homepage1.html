@@ -4,10 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>도서관 좌석 현황</title>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    body {
+  font-family: 'Black Han Sans', sans-serif;
+    }
     .active-btn {
-      background-color: #1e3a8a !important;
+      background-color: #2563eb !important;
       color: white !important;
     }
     .selected-seat {
@@ -97,17 +101,8 @@
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800 p-4">
-  <div class="korean-text">
-    <!-- Google Fonts에서 Noto Sans KR 로드 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@700&display=swap" rel="stylesheet">
-    <style>
-      /* h1에 Noto Sans KR 글꼴 적용 */
-      h1 {
-        font-family: 'Noto Sans KR', sans-serif;
-        font-weight: 700; /* 굵은 스타일 */
-      }
-    </style>
-    <h1 class="text-2xl mb-4 flex items-center gap-2">열람실 좌석 현황</h1>
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-2xl font-family mb-4 flex items-center gap-2"> 열람실 좌석 현황</h1>
 
     <div class="mb-4">
       <p id="current-user" class="text-lg">현재 사용자 아이디: 로딩 중...</p>
@@ -116,8 +111,6 @@
     <div class="mb-4">
       <p id="available-seats" class="text-lg">남은 자리: 로딩 중...</p>
     </div>
-  </div>
-</body>
 
     <div class="flex space-x-2 mb-4">
       <button onclick="showRoom('room1')" class="px-4 py-2 bg-white border rounded shadow hover:bg-blue-100 active-btn" id="btn-room1">
@@ -173,15 +166,11 @@
     }
 
     function updateAvailableSeats() {
-        const totalSeats = 342;
-        const reservedSeats = Object.keys(seatReservations).length;
-        const availableSeatsElement = document.getElementById('available-seats');
-        availableSeatsElement.textContent = `남은 자리: ${totalSeats - reservedSeats} / ${totalSeats}`;
-        // Noto Sans KR 글꼴 동적 적용 (굵은 스타일 미적용)
-        availableSeatsElement.style.fontFamily = "'Noto Sans KR', sans-serif";
-        availableSeatsElement.style.fontWeight = "normal";
-        console.log(`Available seats updated: ${totalSeats - reservedSeats}/${totalSeats}`);
-      }
+      const totalSeats = 342;
+      const reservedSeats = Object.keys(seatReservations).length;
+      document.getElementById('available-seats').textContent = `남은 자리: ${totalSeats - reservedSeats} / ${totalSeats}`;
+      console.log(`Available seats updated: ${totalSeats - reservedSeats}/${totalSeats}`);
+    }
 
     function showCustomModal(message, showExtend, onExtend, onReturn) {
       const modal = document.getElementById('custom-modal');
@@ -442,14 +431,10 @@
       }
     }
 
-      function displayUserInfo() {
-        const userElement = document.getElementById('current-user');
-        userElement.textContent = `현재 사용자 아이디: ${currentUser}`;
-        // Noto Sans KR 글꼴 동적 적용 (굵은 스타일 미적용)
-        userElement.style.fontFamily = "'Noto Sans KR', sans-serif";
-        userElement.style.fontWeight = "normal";
-        console.log(`Displayed user info: ${currentUser}`);
-      }
+    function displayUserInfo() {
+      document.getElementById('current-user').textContent = `현재 사용자 아이디: ${currentUser}`;
+      console.log(`Displayed user info: ${currentUser}`);
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
       console.log('DOMContentLoaded event fired');
